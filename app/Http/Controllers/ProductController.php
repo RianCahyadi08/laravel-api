@@ -42,4 +42,14 @@ class ProductController extends Controller
             'data'      =>  $product
         ]);
     }
+
+    public function deleteProductId($id)
+    {
+        $product = Product::find($id)->delete();
+
+        return response()->json([
+            'message'   => 'Successfully deleted data'
+        ]);
+    }
+
 }
