@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -23,6 +24,12 @@ class ProductController extends Controller
 
     public function getAllProduct()
     {
-        
+        // $products = DB::table('products')->get();
+        $products = Product::all();
+
+        return response()->json([
+            'message'   => 'Successfully get data',
+            'data'      => $products
+        ]);
     }
 }
