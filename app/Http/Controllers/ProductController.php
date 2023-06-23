@@ -14,7 +14,8 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             'name'  => 'required',
             'price' =>  'required|numeric',
-            'desc'  => 'max: 100'
+            'desc'  => 'max: 100',
+            'brand_id'  => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -24,10 +25,16 @@ class ProductController extends Controller
         }
 
         $product = Product::create([
-            'name'      =>  $request->product_name,
+            'name'      =>  $request->name,
             'price'     =>  $request->price,
-            'desc'      =>  $request->description
+            'desc'      =>  $request->description,
+            'brand_id'  =>  $request->brand_id
         ]);
+
+        // $product = Product::create($request->all());
+
+        var_dump($product);
+
 
         return response()->json([
             'message'   => 'Successfully created data',
@@ -37,8 +44,10 @@ class ProductController extends Controller
 
     public function getAllProduct()
     {
-        $products = Product::all();
-
+        // $products = Product::all();
+        $products = Product::with('brand')->get();
+        
+        // var_dump($products);
         return response()->json([
             'message'   =>  'Successfully get data',
             'data'      => $products
@@ -48,8 +57,9 @@ class ProductController extends Controller
     public function getProductId($id)
     {
 
-        $product = Product::findOrFail($id);
-        
+        // $product = Product::findOrFail($id);
+        $product = Product::with('brand')->findOrFail($id);
+
         return response()->json([
             'message'   =>  'Successfully get data',
             'data'      =>  $product
@@ -61,7 +71,8 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             'name'  => 'required',
             'price' =>  'required|numeric',
-            'desc'  => 'max: 100'
+            'desc'  => 'max: 100',
+            'brand_id' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -71,9 +82,10 @@ class ProductController extends Controller
         }
 
         $product = Product::find($id)->update([
-            'name'      =>  $request->product_name,
+            'name'      =>  $request->name,
             'price'     =>  $request->price,
-            'desc'      =>  $request->description
+            'desc'      =>  $request->description,
+            'brand_id'  =>  $request->brand_id
         ]);
 
         return response()->json([
@@ -93,7 +105,8 @@ class ProductController extends Controller
 
     public function searchProduct(Request $request)
     {
-        $product = Product::where('name', 'LIKE', '%'.$request->product_name.'%')->get();
+        // $product = Product::where('name', 'LIKE', '%'.$request->name.'%')->get();
+        $product = Product::with('brand')->where('name', 'LIKE', '%'.$request->name.'%')->get();
 
         return response()->json([
             'message'   => 'Successfully searched data',
