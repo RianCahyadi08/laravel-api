@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Validator;
+use Auth;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Symfony\Component\HttpFoundation\Response;
 
 class BrandController extends Controller
 {
+
     public function getAllBrand()
     {
         // $products = Product::all();
